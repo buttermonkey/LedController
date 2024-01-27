@@ -63,4 +63,13 @@ public class LedControllerImpl implements LedController {
         return ledList.toArray(ledStatuses);
     }
 
+    @Override
+    public void reportGroupStatus() throws IOException {
+        LedStatus[] groupLeds = getGroupLeds();
+
+        for (var led : groupLeds) {
+            System.out.println(led);
+        }
+    }
+
 }

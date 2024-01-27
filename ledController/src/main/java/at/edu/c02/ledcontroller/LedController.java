@@ -10,4 +10,5 @@ public interface LedController {
      LedStatus[] getGroupLeds() throws IOException;
 
 
+    void reportGroupStatus() throws IOException;
 }
