@@ -3,6 +3,7 @@ package at.edu.c02.ledcontroller;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +48,8 @@ public class LedControllerImpl implements LedController {
         List<LedStatus> ledList = new ArrayList<>();
         // read the lines from json object of the lights array
         for (int i = 0; i < laenge ; i++) {
-            LedStatus led = new LedStatus();
             JSONObject light = lights.getJSONObject(i);
-            led.id = light.getInt("id");
-            led.color = light.getString("color");
-            led.on = light.getBoolean("on");
-            JSONObject groupByGroup = light.getJSONObject("groupByGroup");
-            led.groupName = groupByGroup.getString("name");
+            LedStatus led = toLedStatus(light);
             if ("G".equals(led.groupName)) {
                 ledList.add(led);
             }
@@ -61,6 +57,16 @@ public class LedControllerImpl implements LedController {
 
         LedStatus[] ledStatuses = new LedStatus[ledList.size()];
         return ledList.toArray(ledStatuses);
+    }
+
+    private static LedStatus toLedStatus(JSONObject light) {
+        LedStatus led = new LedStatus();
+        led.id = light.getInt("id");
+        led.color = light.getString("color");
+        led.on = light.getBoolean("on");
+        JSONObject groupByGroup = light.getJSONObject("groupByGroup");
+        led.groupName = groupByGroup.getString("name");
+        return led;
     }
 
     @Override
@@ -72,4 +78,18 @@ public class LedControllerImpl implements LedController {
         }
     }
 
+    @Override
+    public void reportLedStatus(BufferedReader reader) throws IOException {
+        System.out.println("Please specify LED ID:");
+        String input = reader.readLine();
+        int ledId = Integer.parseInt(input);
+
+        JSONObject ledJson = apiService.getLight(ledId);
+        // get the "lights" array from the response
+        JSONArray lights = ledJson.getJSONArray("lights");
+        // read the first json object of the lights array
+        JSONObject firstLight = lights.getJSONObject(0);
+        LedStatus led = toLedStatus(firstLight);
+        System.out.println(led);
+    }
 }

@@ -17,7 +17,8 @@ public class Main {
         {
             System.out.println("=== LED Controller ===");
             System.out.println("Enter 'demo' to send a demo request");
-            System.out.println("Enter 'groupstatus' to print status of LEDs for group G");
+            System.out.println("Enter 'groupstatus' to print the status of LEDs for group G");
+            System.out.println("Enter 'status' to print the status of a single LED");
             System.out.println("Enter 'exit' to exit the program");
             input = reader.readLine();
             if(input.equalsIgnoreCase("demo"))
@@ -25,6 +26,8 @@ public class Main {
                 ledController.demo();
             } else if(input.equalsIgnoreCase("groupstatus")) {
                 ledController.reportGroupStatus();
+            } else if(input.equalsIgnoreCase("status")) {
+                ledController.reportLedStatus(reader);
             }
         }
     }
