@@ -1,5 +1,6 @@
 package at.edu.c02.ledcontroller;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,8 +26,18 @@ public class ApiServiceImpl implements ApiService {
     @Override
     public JSONObject getLights() throws IOException
     {
-        // Connect to the server
-        URL url = new URL("https://balanced-civet-91.hasura.app/api/rest/getLights");
+        return getJsonObject("https://balanced-civet-91.hasura.app/api/rest/getLights", "getLights()");
+
+    }
+
+    @Override
+    public JSONObject getLight(int id) throws IOException {
+        return getJsonObject("https://balanced-civet-91.hasura.app/api/rest/lights/" + id, "getLight(id)");
+    }
+
+    private static JSONObject getJsonObject(String httpUrl, String funcname) throws IOException {
+        //Connect to server
+        URL url = new URL(httpUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         // and send a GET request
         connection.setRequestMethod("GET");
@@ -35,7 +46,7 @@ public class ApiServiceImpl implements ApiService {
         int responseCode = connection.getResponseCode();
         if(responseCode != HttpURLConnection.HTTP_OK) {
             // Something went wrong with the request
-            throw new IOException("Error: getLights request failed with response code " + responseCode);
+            throw new IOException("Error: " + funcname + " request failed with response code " + responseCode);
         }
 
         // The request was successful, read the response
