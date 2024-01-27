@@ -54,16 +54,13 @@ public class LedControllerImpl implements LedController {
             led.on = light.getBoolean("on");
             JSONObject groupByGroup = light.getJSONObject("groupByGroup");
             led.groupName = groupByGroup.getString("name");
-            if (led.groupName == "G") {
+            if ("G".equals(led.groupName)) {
                 ledList.add(led);
             }
-
-            // read int and string properties of the light
-            System.out.println("First light id is: " + light.getInt("id"));
-            System.out.println("First light color is: " + light.getString("color"));
         }
 
-        return (LedStatus[])ledList.stream().toArray();
+        LedStatus[] ledStatuses = new LedStatus[ledList.size()];
+        return ledList.toArray(ledStatuses);
     }
 
 }
